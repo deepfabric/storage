@@ -36,10 +36,7 @@ func newNemoStorage(opts *options) Storage {
 	var nemoOpts *gonemo.Options
 	var err error
 	if opts.nemoOptions != "" {
-		nemoOpts, err = gonemo.NewOptions(opts.nemoOptions)
-		if err != nil {
-			panic(err)
-		}
+		nemoOpts, _ = gonemo.NewOptions(opts.nemoOptions)
 	} else {
 		nemoOpts = gonemo.NewDefaultOptions()
 	}
@@ -73,7 +70,11 @@ func (ns *nemoStorage) Seek(key []byte) ([]byte, []byte, error) {
 	return ns.nemo.SeekWithHandle(ns.nemoDB, key)
 }
 
-func (ns *nemoStorage) Scan(start, end []byte, handler func(key, value []byte) (bool, error), pooledKey bool) error {
+func (ns *nemoStorage) Scan(start, end []byte, handler func(key, value []byte) (bool, error)) error {
+	return ns.ScanWithPooledKey(start, end, handler, false)
+}
+
+func (ns *nemoStorage) ScanWithPooledKey(start, end []byte, handler func(key, value []byte) (bool, error), pooledKey bool) error {
 	var key []byte
 	var err error
 	c := false

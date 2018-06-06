@@ -34,7 +34,6 @@ type nemoStorage struct {
 
 func newNemoStorage(opts *options) Storage {
 	var nemoOpts *gonemo.Options
-	var err error
 	if opts.nemoOptions != "" {
 		nemoOpts, _ = gonemo.NewOptions(opts.nemoOptions)
 	} else {
